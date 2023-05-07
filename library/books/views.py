@@ -23,22 +23,24 @@ class MyLibrary(ListView):
         date_from = self.request.GET.get("start", '1900-07-22')
         today = self.request.GET.get("stop", date.today())
 
-        books = Book.objects.all()
+        books = Book.objects.all().filter(
+            published_date__range=[date_from, today])
         filtered_title = books.filter(title__icontains=search_title)
         filtered_author = filter_authors(searched_author, filtered_title)
         filtered_language = filter_language(searched_language, filtered_author)
-        filtered_date = filtered_language.filter(
-            published_date__range=[date_from, today])
-        print(filtered_date)
 
-        filtered_books = filtered_date
+        filtered_books = filtered_language
         authors = Author.objects.all()
         languages = Language.objects.all()
 
         queryset = {'filtered_books': filtered_books,
                     'all_authors': authors,
                     'all_languages': languages,
-                    'today': str(today)}
+                    'date_from': str(date_from),
+                    'today': str(today),
+                    'searched_author': searched_author,
+                    'searched_language': searched_language,
+                    'searched_title': search_title}
 
         return queryset
 

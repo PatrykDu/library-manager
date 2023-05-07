@@ -42,11 +42,23 @@
     <label for="stop">To date:</label>
     <input name="stop" type="date" id="stop" name="date-stop" value={{ library.today }}>
 
-    <input class="btn btn-primary" type="submit" value="Search">
+    <input id="search_button" class="btn-primary" type="submit" value="Search">
   </section>
 </form>
   <section id="all-books">
     <h2>All imported books in your library</h2>
+    <h1>All results 
+        for date from: {{ library.date_from }} to: {{ library.today }}
+        {% if library.searched_title != '' %}
+        , title: {{ library.searched_title }}
+        {% endif %}
+        {% if library.searched_author != '' %}
+        , author: {{ library.searched_author }}
+        {% endif %}
+        {% if library.searched_language != '' %}
+        , language: {{ library.searched_language }}
+        {% endif %}
+    </h1>
     <ul>
       {% for book in library.filtered_books %}
         {% include "books/includes/book.html" %}

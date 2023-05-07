@@ -63,6 +63,11 @@ body {
     max-width: 60rem;
 }
 
+#search_button {
+    margin-left: 27rem;
+    margin-top: 2rem;
+}
+
 #all-books {
     margin: 7rem auto;
     width: 90%;
