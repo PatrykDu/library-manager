@@ -1,0 +1,16 @@
+<li>
+    <article class="book">
+      {% comment %} <a href="{% url "post-detail-page" post.slug %}"> {% endcomment %}
+    <img src="{{ book.thumbnail }}" alt="{{ book.title }}"
+    />
+    <div class="book__content">
+        <h3>{{ book.title }}</h3>
+        <p>Authors: {{ book.all_authors }}</p>
+        <p>Date of publish: {{ book.published_date }}</p>
+        <p>ISBN: {{ book.isbn_10 }}</p>
+        <p>Pages: {{ book.page_count }}</p>
+        <p>Language: {{ book.language }}</p>
+    </div>
+    </a>
+</article>
+</li>

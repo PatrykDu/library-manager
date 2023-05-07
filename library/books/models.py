@@ -22,7 +22,10 @@ class Book(models.Model):
     isbn_13 = models.CharField(max_length=13)
     page_count = models.IntegerField()
     thumbnail = models.CharField(max_length=255)
-    language = models.ManyToManyField(Language)
+    language = models.ForeignKey(Language, on_delete=models.CASCADE, null=False)
 
     def __str__(self) -> str:
-        return f"Title: {self.title}, By: [x for x in self.authors]"
+        return f"{self.title}"
+    
+    def all_authors(self):
+        return ",\n".join([a.name for a in self.authors.all()])

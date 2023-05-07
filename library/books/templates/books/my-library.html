@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Library</title>
+  <link rel="stylesheet" href="{% static "my-library.css" %}">
+</head>
+<body>
+  <header id="main-navigation">
+    <h1>My Library</h1>
+    <nav>
+      {% comment %} <a href="{% url "posts-page" %}">Import books</a> {% endcomment %}
+      <a>Import books</a>
+    </nav>
+  </header>
+
+  <section id="all-books">
+    <h2>All imported books in your library</h2>
+  
+    <ul>
+      {% for book in all_imported_books %}
+        {% include "books/includes/book.html" %}
+      {% endfor %}
+    </ul>
+  </section>
+  
+</body>
+</html>
