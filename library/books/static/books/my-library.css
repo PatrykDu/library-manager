@@ -29,11 +29,11 @@ h3 {
   position: absolute;
   top: 0;
   left: 0;
+  color: white;
 }
 
 #main-navigation a {
   text-decoration: none;
-  color: white;
   font-weight: bold;
   margin-left: 1rem;
 }
@@ -46,4 +46,44 @@ h3 {
 #main-navigation h1 a:hover,
 #main-navigation h1 a:active {
   color: #ffc686;
+}
+
+body {
+    background-color: #e7e7e7;
+  }
+
+#main-navigation {
+    background-color: #0b2357;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+#all-books {
+    margin: 7rem auto;
+    width: 90%;
+    max-width: 60rem;
+  }
+  
+#all-books h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #2e2e2e;
+    margin: 3rem 0;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 1.5rem;
+  }
+
+.book {
+    height: auto;
+    width: auto;
+    transform-origin: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    background-color: white;
 }
