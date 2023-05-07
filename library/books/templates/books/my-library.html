@@ -13,19 +13,34 @@
     <h1>My Library</h1>
     <nav>
       {% comment %} <a href="{% url "posts-page" %}">Import books</a> {% endcomment %}
-      <a>Import books</a>
+      <a>Import more books</a>
     </nav>
   </header>
 <form action="{% url 'my-library' %}" method="get">
   <section id="search">
+
+
     <label>Title:<input name="t" placeholder="Search Title"></label>
 
-        <select name="a">
-            <option value="">-----</option>
+    <label>Author:<select name="a">
+            <option value="">Any</option>
             {% for author in library.all_authors %}
             <option value="{{ author }}">{{ author }}</option>
             {% endfor %}
-        </select >
+        </select ></label>
+
+    <label>Language:<select name="l">
+            <option value="">Any</option>
+            {% for language in library.all_languages %}
+            <option value="{{ language }}">{{ language }}</option>
+            {% endfor %}
+        </select ></label>
+    
+    <label for="start">From date:</label>
+    <input name="start" type="date" id="start" name="date-start" value="1900-07-22">
+
+    <label for="stop">To date:</label>
+    <input name="stop" type="date" id="stop" name="date-stop" value={{ library.today }}>
 
     <input class="btn btn-primary" type="submit" value="Search">
   </section>

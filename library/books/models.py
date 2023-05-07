@@ -2,17 +2,20 @@ from django.db import models
 
 # Create your models here.
 
+
 class Author(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self) -> str:
         return self.name
 
+
 class Language(models.Model):
     language = models.CharField(max_length=100)
 
     def __str__(self) -> str:
         return self.language
+
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
@@ -22,16 +25,20 @@ class Book(models.Model):
     isbn_13 = models.CharField(max_length=13)
     page_count = models.IntegerField()
     thumbnail = models.CharField(max_length=255)
-    language = models.ForeignKey(Language, on_delete=models.CASCADE, null=False)
+    language = models.ForeignKey(
+        Language, on_delete=models.CASCADE, null=False)
 
     def __str__(self) -> str:
         return f"{self.title}"
-    
+
     def all_authors(self):
         return ",\n".join([a.name for a in self.authors.all()])
-    
+
     def get_list_of_authors(self):
         list_of_authors = []
         for author in self.authors.all():
             list_of_authors.append(author.name)
         return list_of_authors
+
+    def get_language(self):
+        return self.language.language
