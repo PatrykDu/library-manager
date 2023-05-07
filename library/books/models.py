@@ -29,3 +29,9 @@ class Book(models.Model):
     
     def all_authors(self):
         return ",\n".join([a.name for a in self.authors.all()])
+    
+    def get_list_of_authors(self):
+        list_of_authors = []
+        for author in self.authors.all():
+            list_of_authors.append(author.name)
+        return list_of_authors

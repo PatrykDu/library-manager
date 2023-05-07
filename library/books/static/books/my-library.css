@@ -57,6 +57,12 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
+#search {
+    margin: 7rem auto;
+    width: 90%;
+    max-width: 60rem;
+}
+
 #all-books {
     margin: 7rem auto;
     width: 90%;

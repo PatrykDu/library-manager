@@ -16,12 +16,24 @@
       <a>Import books</a>
     </nav>
   </header>
+<form action="{% url 'my-library' %}" method="get">
+  <section id="search">
+    <label>Title:<input name="t" placeholder="Search Title"></label>
 
+        <select name="a">
+            <option value="">-----</option>
+            {% for author in library.all_authors %}
+            <option value="{{ author }}">{{ author }}</option>
+            {% endfor %}
+        </select >
+
+    <input class="btn btn-primary" type="submit" value="Search">
+  </section>
+</form>
   <section id="all-books">
     <h2>All imported books in your library</h2>
-  
     <ul>
-      {% for book in all_imported_books %}
+      {% for book in library.filtered_books %}
         {% include "books/includes/book.html" %}
       {% endfor %}
     </ul>
