@@ -2,7 +2,9 @@ from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
+from django.views.generic.base import TemplateView
 from django.views.generic import ListView
+from django.views.generic.edit import CreateView
 from .models import Book, Author, Language
 from datetime import date
 
@@ -11,7 +13,23 @@ def books(request):
     return HttpResponse("Hello, world. You're at the books index.")
 
 
-class MyLibrary(ListView):
+class CreateBookView(CreateView):
+    template_name = 'books/add-book.html'
+    model = Book
+    fields = "__all__"
+    success_url = "/thank-you"
+
+
+class ThankYouView(TemplateView):
+    template_name = "books/thank-you.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["message"] = "tittle"
+        return context
+
+
+class MyLibraryView(ListView):
     template_name = 'books/my-library.html'
     model = Book
     context_object_name = 'library'
