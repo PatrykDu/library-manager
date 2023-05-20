@@ -6,17 +6,14 @@ from django.views.generic.base import TemplateView
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView
 from .models import Book, Author, Language
+from .forms import BookForm
 from datetime import date
 
 
-def books(request):
-    return HttpResponse("Hello, world. You're at the books index.")
-
-
 class CreateBookView(CreateView):
-    template_name = 'books/add-book.html'
     model = Book
-    fields = "__all__"
+    form_class = BookForm
+    template_name = 'books/add-book.html'
     success_url = "/thank-you"
 
 
