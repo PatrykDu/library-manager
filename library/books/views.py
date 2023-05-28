@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 from django.views.generic.base import TemplateView
 from django.views.generic import ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from .models import Book, Author, Language
 from .forms import BookForm
 from datetime import date
@@ -15,6 +15,13 @@ class CreateBookView(CreateView):
     form_class = BookForm
     template_name = 'books/add-book.html'
     success_url = "/thank-you"
+
+
+class SingleBookView(UpdateView):
+    model = Book
+    form_class = BookForm
+    template_name = 'books/single-book.html'
+    success_url = ""
 
 
 class ThankYouView(TemplateView):

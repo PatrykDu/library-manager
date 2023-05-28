@@ -62,6 +62,7 @@
     </h1>
     <ul>
       {% for book in library.filtered_books %}
+        <a href="{% url "book-detail-page" book.isbn_10 %}">
         {% include "books/includes/book.html" %}
       {% endfor %}
     </ul>
