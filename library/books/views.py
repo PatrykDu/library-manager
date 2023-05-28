@@ -2,14 +2,30 @@ from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.base import TemplateView
 from django.views.generic import ListView
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from .models import Book, Author, Language
 from .forms import BookForm
 from datetime import date
+import requests
+
+
+class ImportBooks(APIView):
+
+    def get(self, request):
+        books_to_import = fetch_book_data()
+        context = {
+            'imported_books': books_to_import
+        }
+        return render(request, 'books/import-book.html', context)
+
+    def post(self, request):
+        title = request.data['title']
 
 
 class CreateBookView(CreateView):
@@ -138,3 +154,37 @@ def filter_language(searched_language, all_books: QuerySet[Book]):
             if searched_language == book_language:
                 filtered_books.append(book)
         return filtered_books
+
+
+def fetch_book_data():
+
+    def all_authors(authors):
+        return ",\n".join([name for name in authors])
+
+    url = "https://www.googleapis.com/books/v1/volumes?q=intitle:item"
+    response = requests.get(url)
+    answer = response.json()
+    books_to_import = answer["items"]
+    books = []
+    for book in books_to_import:
+        book_data = {}
+        book_data['title'] = book['volumeInfo']['title'] if 'title' in book['volumeInfo'] else 'empty title'
+        book_data['authors'] = book['volumeInfo']['authors'] if "authors" in book['volumeInfo'] else [
+            'Anonim']
+        book_data['all_authors'] = all_authors(book_data['authors'])
+        book_data['published_date'] = book['volumeInfo']['publishedDate'] if "publishedDate" in book['volumeInfo'] else None
+        if len(book['volumeInfo']['industryIdentifiers']) == 2:
+            book_data['isbn_10'] = book['volumeInfo']['industryIdentifiers'][1]['identifier'] if book[
+                'volumeInfo']['industryIdentifiers'][1]['type'] == 'ISBN_10' else None
+            book_data['isbn_13'] = book['volumeInfo']['industryIdentifiers'][0]['identifier'] if book[
+                'volumeInfo']['industryIdentifiers'][0]['type'] == 'ISBN_13' else None
+        else:
+            book_data['isbn_10'] = ''
+            book_data['isbn_13'] = ''
+        book_data['page_count'] = book['volumeInfo']['pageCount'] if "pageCount" in book['volumeInfo'] else 0
+        book_data['thumbnail'] = book['volumeInfo']['imageLinks']['smallThumbnail'] if 'smallThumbnail' in book['volumeInfo']['imageLinks'] else 'No Cover'
+        book_data['language'] = book['volumeInfo']['language'] if 'language' in book['volumeInfo'] else 'en'
+        book_data['etag'] = book['etag']
+        books.append(book_data)
+
+    return books

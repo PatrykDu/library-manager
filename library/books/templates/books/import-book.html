@@ -19,35 +19,19 @@
   </header>
 <form action="{% url 'my-library' %}" method="get">
   <section id="search">
-
-    <label>Title:<input name="t" placeholder="Search Title"></label>
-
-    <label>Author:<select name="a">
-            <option value="">Any</option>
-            {% for author in library.all_authors %}
-            <option value="{{ author }}">{{ author }}</option>
-            {% endfor %}
-        </select ></label>
-
-    <label>Language:<select name="l">
-            <option value="">Any</option>
-            {% for language in library.all_languages %}
-            <option value="{{ language }}">{{ language }}</option>
-            {% endfor %}
-        </select ></label>
-    
-    <label for="start">From date:</label>
-    <input name="start" type="date" id="start" name="date-start" value="1900-07-22">
-
-    <label for="stop">To date:</label>
-    <input name="stop" type="date" id="stop" name="date-stop" value={{ library.today }}>
-
+    <label>Title:<input name="t" placeholder="Keyword found in the title"></label>
+    <label>Author:<input name="t" placeholder="Keyword found in the author"></label>
+    <label>Publisher:<input name="t" placeholder="Keyword found in the publisher"></label>
+    <label>Subject:<input name="t" placeholder="Listed in the category list"></label>
+    <label>ISBN:<input name="t" placeholder="ISBN number"></label>
+    <label>LCCN:<input name="t" placeholder="Library of Congress Control Number"></label>
+    <label>OCLC:<input name="t" placeholder="Online Computer Library Center Number"></label>
     <input id="search_button" class="btn-primary" type="submit" value="Search">
   </section>
 </form>
   <section id="all-books">
     <h2>All imported books in your library</h2>
-    <h1>All results 
+    {% comment %} <h1>All results 
         for date from: {{ library.date_from }} to: {{ library.today }}
         {% if library.searched_title != '' %}
         , title: {{ library.searched_title }}
@@ -58,13 +42,16 @@
         {% if library.searched_language != '' %}
         , language: {{ library.searched_language }}
         {% endif %}
-    </h1>
+    </h1> {% endcomment %}
+
+    
     <ul>
-      {% for book in library.filtered_books %}
-        <a href="{% url "book-detail-page" book.id %}">
+      {% for book in imported_books %}
         {% include "books/includes/book.html" %}
       {% endfor %}
     </ul>
+
+
   </section>
   
 </body>
