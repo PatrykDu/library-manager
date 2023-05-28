@@ -20,8 +20,9 @@ class CreateBookView(CreateView):
 
 
 class SingleBookView(UpdateView):
-    template_name = 'books/single-book.html'
     model = Book
+    fields = "__all__"
+    template_name = 'books/single-book.html'
 
     def get(self, request, id):
         book: Book = Book.objects.get(id=id)
@@ -46,20 +47,28 @@ class SingleBookView(UpdateView):
 
         return render(request, "books/single-book.html", context)
 
-    def post(self, request, isbn_10):
+    def post(self, request, id):
         book_form: BookForm = BookForm(request.POST)
-        book: Book = Book.objects.get(isbn_10=isbn_10)
+        book: Book = Book.objects.get(id=id)
 
         if book_form.is_valid():
-            book_changed = book_form.save(commit=False)
-            book_changed = book
-            book_changed.save()
-            return HttpResponseRedirect(reverse("book-detail-page", args=[isbn_10]))
+            book.title = book_form.cleaned_data['title']
+            book.authors.set(book_form.cleaned_data['authors'])
+            book.published_date = book_form.cleaned_data['published_date']
+            book.isbn_10 = book_form.cleaned_data['isbn_10']
+            book.isbn_13 = book_form.cleaned_data['isbn_13']
+            book.page_count = book_form.cleaned_data['page_count']
+            book.thumbnail = book_form.cleaned_data['thumbnail']
+            book.language = book_form.cleaned_data['language']
+
+            book.save()
+            return HttpResponseRedirect(reverse("book-detail-page", args=[id]))
+
+        book: Book = Book.objects.get(id=id)
 
         context = {
             "book": book,
             "book_form": book_form,
-            "book_changed": book_changed
         }
         return render(request, "blog/single-book.html", context)
 
