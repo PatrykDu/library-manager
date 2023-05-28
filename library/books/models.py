@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
@@ -42,3 +43,6 @@ class Book(models.Model):
 
     def get_language(self):
         return self.language.language
+
+    def get_absolute_url(self):
+        return reverse("book-detail", kwargs={"pk": self.pk})

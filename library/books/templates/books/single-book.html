@@ -17,13 +17,13 @@
     </nav>
   </header>
 
+  <img src="{{ book.thumbnail }}" alt="{{ book.id }}">
   <form action="" method="POST" id="content">
     {% csrf_token %}
-    {% for field in form %}
+    {% for field in book_form %}
     <div class="form-control {% if field.errors %}errors{% endif %}">
-        {{ field.label_tag }}
+        {{ field.label }}:
         {{ field }}
-        {{ field.errors }}
     </div>
     {% endfor %}
     <button type="submit">Send</button>

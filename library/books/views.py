@@ -1,9 +1,11 @@
 from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from django.views.generic import ListView
+from django.views import View
 from django.views.generic.edit import CreateView, UpdateView
 from .models import Book, Author, Language
 from .forms import BookForm
@@ -18,10 +20,48 @@ class CreateBookView(CreateView):
 
 
 class SingleBookView(UpdateView):
-    model = Book
-    form_class = BookForm
     template_name = 'books/single-book.html'
-    success_url = ""
+    model = Book
+
+    def get(self, request, isbn_10):
+        book: Book = Book.objects.get(isbn_10=isbn_10)
+
+        # Add initial data to the form
+        intaial_data = {
+            'title': book.title,
+            'authors': book.authors.all(),
+            "published_date": book.published_date,
+            "isbn_10": book.isbn_10,
+            "isbn_13": book.isbn_13,
+            "page_count": book.page_count,
+            "thumbnail": book.thumbnail,
+            "language": book.language
+        }
+        form = BookForm(initial=intaial_data)
+
+        context = {
+            "book": book,
+            "book_form": form
+        }
+
+        return render(request, "books/single-book.html", context)
+
+    def post(self, request, isbn_10):
+        book_form: BookForm = BookForm(request.POST)
+        book: Book = Book.objects.get(isbn_10=isbn_10)
+
+        if book_form.is_valid():
+            book_changed = book_form.save(commit=False)
+            book_changed = book
+            book_changed.save()
+            return HttpResponseRedirect(reverse("book-detail-page", args=[isbn_10]))
+
+        context = {
+            "book": book,
+            "book_form": book_form,
+            "book_changed": book_changed
+        }
+        return render(request, "blog/single-book.html", context)
 
 
 class ThankYouView(TemplateView):
