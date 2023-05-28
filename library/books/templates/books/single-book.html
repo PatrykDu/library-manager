@@ -17,7 +17,7 @@
     </nav>
   </header>
 
-  <img src="{{ book.thumbnail }}" alt="{{ book.id }}">
+  <img id="cover" src="{{ book.thumbnail }}" alt="{{ book.id }}">
   <form action="" method="POST" id="content">
     {% csrf_token %}
     {% for field in book_form %}
