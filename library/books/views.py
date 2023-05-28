@@ -23,8 +23,8 @@ class SingleBookView(UpdateView):
     template_name = 'books/single-book.html'
     model = Book
 
-    def get(self, request, isbn_10):
-        book: Book = Book.objects.get(isbn_10=isbn_10)
+    def get(self, request, id):
+        book: Book = Book.objects.get(id=id)
 
         # Add initial data to the form
         intaial_data = {
