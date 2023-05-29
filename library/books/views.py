@@ -63,9 +63,9 @@ class ImportBooks(APIView):
         title = searched_book['title']
         published_date = searched_book['published_date']
         isbn_10 = searched_book['isbn_10'] if len(
-            searched_book['isbn_10']) == 10 else '0000000000'
+            searched_book['isbn_10']) == 10 else None
         isbn_13 = searched_book['isbn_13'] if len(
-            searched_book['isbn_13']) == 13 else '0000000000000'
+            searched_book['isbn_13']) == 13 else None
         page_count = searched_book['page_count']
         thumbnail = searched_book['thumbnail']
         language = searched_book['language']

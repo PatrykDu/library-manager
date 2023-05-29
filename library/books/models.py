@@ -19,15 +19,15 @@ class Language(models.Model):
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=200)
-    authors = models.ManyToManyField(Author)
-    published_date = models.DateField()
-    isbn_10 = models.CharField(max_length=10)
-    isbn_13 = models.CharField(max_length=13)
-    page_count = models.IntegerField()
-    thumbnail = models.CharField(max_length=255)
+    title = models.CharField(max_length=200, null=True, blank=True)
+    authors = models.ManyToManyField(Author, null=True, blank=True)
+    published_date = models.DateField(null=True, blank=True)
+    isbn_10 = models.CharField(max_length=10, null=True, blank=True)
+    isbn_13 = models.CharField(max_length=13, null=True, blank=True)
+    page_count = models.IntegerField(null=True, blank=True)
+    thumbnail = models.CharField(max_length=255, null=True, blank=True)
     language = models.ForeignKey(
-        Language, on_delete=models.CASCADE, null=False)
+        Language, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.title}"
