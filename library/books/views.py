@@ -48,48 +48,60 @@ class ImportBooks(APIView):
         return render(request, 'books/import-book.html', context)
 
     def post(self, request):
-        title_book = self.request.POST.get('title_data')
-        pages_book = int(self.request.POST.get('pages_data'))
-        date_book = self.request.POST.get('date_data')
 
-        context = self.prepare_data(request)
-        imported_book = context['imported_books']
+        book_to_import = {}
+        book_to_import['thumbnail'] = self.request.POST.get('thumbnail_data')
+        book_to_import['title'] = self.request.POST.get('title_data')
+        book_to_import['all_authors'] = self.request.POST.get('authors_data')
+        book_to_import['published_date'] = self.request.POST.get('date_data')
+        book_to_import['isbn_10'] = self.request.POST.get('isbn10_data')
+        book_to_import['isbn_13'] = self.request.POST.get('isbn13_data')
+        book_to_import['page_count'] = self.request.POST.get('pages_data')
+        book_to_import['language'] = self.request.POST.get('language_data')
 
-        for book in imported_book:
-            if title_book in book['title'] and pages_book == book['page_count'] and date_book == book['published_date']:
-                searched_book = book
-                break
-
-        title = searched_book['title']
-        published_date = searched_book['published_date']
-        isbn_10 = searched_book['isbn_10'] if len(
-            searched_book['isbn_10']) == 10 else None
-        isbn_13 = searched_book['isbn_13'] if len(
-            searched_book['isbn_13']) == 13 else None
-        page_count = searched_book['page_count']
-        thumbnail = searched_book['thumbnail']
-        language = searched_book['language']
+        title = book_to_import['title']
+        published_date = book_to_import['published_date']
+        isbn_10 = book_to_import['isbn_10'] if len(
+            book_to_import['isbn_10']) == 10 else None
+        isbn_13 = book_to_import['isbn_13'] if len(
+            book_to_import['isbn_13']) == 13 else None
+        page_count = book_to_import['page_count']
+        thumbnail = book_to_import['thumbnail']
+        language = book_to_import['language']
 
         authors = []
-        author_names = searched_book['all_authors']
-        author_names = author_names.split(',\n')
+        author_names = book_to_import['all_authors'][1:-1]
+        author_names = author_names.replace("'", "")
+        if "," in author_names:
+            authors = author_names.split(",")
+        else:
+            authors.append(author_names)
 
-        for author in author_names:
+        author_models = []
+        for author in authors:
+            if author[0] == " ":
+                author = author[1:]
             try:
                 found_author = Author.objects.get(name__icontains=author)
-                authors.append(found_author)
+                author_models.append(found_author)
             except Author.DoesNotExist:
-                pass
+                new_author = Author.objects.create()
+                new_author.name = author
+                new_author.save()
+                author_models.append(new_author)
 
         try:
             found_language = Language.objects.get(language__icontains=language)
         except Language.DoesNotExist:
-            pass
+            new_language = Language.objects.create()
+            new_language.language = language
+            new_language.save()
+            found_language = new_language
 
         new_book = Book.objects.create()
 
         new_book.title = title
-        new_book.authors.set(authors)
+        new_book.authors.set(author_models)
         new_book.published_date = published_date
         new_book.isbn_10 = isbn_10
         new_book.isbn_13 = isbn_13
@@ -99,7 +111,7 @@ class ImportBooks(APIView):
 
         new_book.save()
 
-        return HttpResponseRedirect(reverse("my-library"), context)
+        return HttpResponseRedirect(reverse("my-library"))
 
 
 class CreateBookView(CreateView):
@@ -267,7 +279,7 @@ def fetch_book_data(query_data):
             book_data['isbn_10'] = book['volumeInfo']['industryIdentifiers'][1]['identifier'] if book[
                 'volumeInfo']['industryIdentifiers'][1]['type'] == 'ISBN_10' else ''
             book_data['isbn_13'] = book['volumeInfo']['industryIdentifiers'][0]['identifier'] if book[
-                'volumeInfo']['industryIdentifiers'][0]['type'] == 'ISBN_13' else None
+                'volumeInfo']['industryIdentifiers'][0]['type'] == 'ISBN_13' else ''
         else:
             book_data['isbn_10'] = ''
             book_data['isbn_13'] = ''

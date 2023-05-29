@@ -51,16 +51,28 @@
                     />
                     <div class="book__content">
                         {% csrf_token %}
+                        <input id="thumbnail_data" name="thumbnail_data" type="text" value="{{ book.thumbnail }}"/>
+
                         <h3>{{ book.title }}</h3>
+                        <input id="title_data" name="title_data" type="text" value="{{ book.title }}"/>
+
                         <p>Authors: {{ book.all_authors }}</p>
+                        <input id="authors_data" name="authors_data" type="text" value="{{ book.authors }}"/>
+
                         <p>Date of publish: {{ book.published_date }}</p>
-                        <p>ISBN: {{ book.isbn_10 }}</p>
-                        <p>Pages: {{ book.page_count }}</p>
-                        <p>Language: {{ book.language }}</p>
-                        {% if book.etag %}
-                        <input id="title_data" name="title_data" type="text" value={{ book.title }}/>
-                        <input id="pages_data" name="pages_data" type="text" value={{ book.page_count }}>
                         <input id="date_data" name="date_data" type="text" value={{ book.published_date }}>
+
+                        <p>ISBN: {{ book.isbn_10 }}</p>
+                        <input id="isbn10_data" name="isbn10_data" type="text" value={{ book.isbn_10 }}>
+                        <input id="isbn13_data" name="isbn13_data" type="text" value={{ book.isbn_13 }}>
+
+                        <p>Pages: {{ book.page_count }}</p>
+                        <input id="pages_data" name="pages_data" type="text" value={{ book.page_count }}>
+
+                        <p>Language: {{ book.language }}</p>
+                        <input id="language_data" name="language_data" type="text" value={{ book.language }}>
+
+                        {% if book.etag %}
                         <input id="confirm_button" class="btn-primary" type="submit" value="Import">
                         {% endif %}
                     </div>
