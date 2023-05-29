@@ -1,3 +1,4 @@
+import datetime
 from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render
@@ -61,6 +62,10 @@ class ImportBooks(APIView):
 
         title = book_to_import['title']
         published_date = book_to_import['published_date']
+        if len(published_date) != 10:
+            published_date = datetime.datetime(int(published_date), 1, 1)
+            published_date = published_date.isoformat()
+            published_date = published_date[:10]
         isbn_10 = book_to_import['isbn_10'] if len(
             book_to_import['isbn_10']) == 10 else None
         isbn_13 = book_to_import['isbn_13'] if len(
