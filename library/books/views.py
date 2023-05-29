@@ -17,8 +17,7 @@ import requests
 
 class ImportBooks(APIView):
 
-    def get(self, request):
-
+    def prepare_data(self, request):
         # fetchs data for query parameters from form
         query_data = {
             "intitle": self.request.GET.get("intitle", ''),
@@ -40,10 +39,67 @@ class ImportBooks(APIView):
             'query_data': query_data,
             'number_of_books': number_of_all_generated_books
         }
+
+        return context
+
+    def get(self, request):
+
+        context = self.prepare_data(request)
         return render(request, 'books/import-book.html', context)
 
     def post(self, request):
-        title = request.data['title']
+        title_book = self.request.POST.get('title_data')
+        pages_book = int(self.request.POST.get('pages_data'))
+        date_book = self.request.POST.get('date_data')
+
+        context = self.prepare_data(request)
+        imported_book = context['imported_books']
+
+        for book in imported_book:
+            if title_book in book['title'] and pages_book == book['page_count'] and date_book == book['published_date']:
+                searched_book = book
+                break
+
+        title = searched_book['title']
+        published_date = searched_book['published_date']
+        isbn_10 = searched_book['isbn_10'] if len(
+            searched_book['isbn_10']) == 10 else '0000000000'
+        isbn_13 = searched_book['isbn_13'] if len(
+            searched_book['isbn_13']) == 13 else '0000000000000'
+        page_count = searched_book['page_count']
+        thumbnail = searched_book['thumbnail']
+        language = searched_book['language']
+
+        authors = []
+        author_names = searched_book['all_authors']
+        author_names = author_names.split(',\n')
+
+        for author in author_names:
+            try:
+                found_author = Author.objects.get(name__icontains=author)
+                authors.append(found_author)
+            except Author.DoesNotExist:
+                pass
+
+        try:
+            found_language = Language.objects.get(language__icontains=language)
+        except Language.DoesNotExist:
+            pass
+
+        new_book = Book.objects.create()
+
+        new_book.title = title
+        new_book.authors.set(authors)
+        new_book.published_date = published_date
+        new_book.isbn_10 = isbn_10
+        new_book.isbn_13 = isbn_13
+        new_book.page_count = page_count
+        new_book.thumbnail = thumbnail
+        new_book.language = found_language
+
+        new_book.save()
+
+        return HttpResponseRedirect(reverse("my-library"), context)
 
 
 class CreateBookView(CreateView):

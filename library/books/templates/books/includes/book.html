@@ -1,11 +1,12 @@
 <li>
-    <form action="{% url 'my-library' %}" method="POST">
+    <form action="{% url 'import-books' %}" method="POST">
         <section id="book-to-import">
             <article class="book">
                 <img src="{{ book.thumbnail }}" alt="{{ book.id }}"
                 />
                 <div class="book__content">
-                    <h3>{{ book.title }}</h3>
+                    {% csrf_token %}
+                    <h3 name="title">{{ book.title }}</h3>
                     <p>Authors: {{ book.all_authors }}</p>
                     <p>Date of publish: {{ book.published_date }}</p>
                     <p>ISBN: {{ book.isbn_10 }}</p>

@@ -43,7 +43,31 @@
     
     <ul>
       {% for book in imported_books %}
-        {% include "books/includes/book.html" %}
+      <li>
+        <form action="{% url 'import-books' %}" method="POST">
+            <section id="book-to-import">
+                <article class="book">
+                    <img src="{{ book.thumbnail }}" alt="{{ book.id }}"
+                    />
+                    <div class="book__content">
+                        {% csrf_token %}
+                        <h3>{{ book.title }}</h3>
+                        <p>Authors: {{ book.all_authors }}</p>
+                        <p>Date of publish: {{ book.published_date }}</p>
+                        <p>ISBN: {{ book.isbn_10 }}</p>
+                        <p>Pages: {{ book.page_count }}</p>
+                        <p>Language: {{ book.language }}</p>
+                        {% if book.etag %}
+                        <input id="title_data" name="title_data" type="text" value={{ book.title }}/>
+                        <input id="pages_data" name="pages_data" type="text" value={{ book.page_count }}>
+                        <input id="date_data" name="date_data" type="text" value={{ book.published_date }}>
+                        <input id="confirm_button" class="btn-primary" type="submit" value="Import">
+                        {% endif %}
+                    </div>
+                </article>
+            </section>
+        </form>
+    </li>
       {% endfor %}
     </ul>
 
