@@ -263,7 +263,7 @@ def fetch_book_data(query_data):
             return query
 
     query_params = construct_query_params(query_data)
-    url = f"https://www.googleapis.com/books/v1/volumes?q={query_params}"
+    url = f"https://www.googleapis.com/books/v1/volumes?q={query_params}&maxResults=40"
     response = requests.get(url)
     answer = response.json()
     numer_of_books = answer['totalItems'] if 'totalItems' in answer else 0
