@@ -1,14 +1,21 @@
 <li>
-  <article class="book">
-      <img src="{{ book.thumbnail }}" alt="{{ book.id }}"
-      />
-      <div class="book__content">
-          <h3>{{ book.title }}</h3>
-          <p>Authors: {{ book.all_authors }}</p>
-          <p>Date of publish: {{ book.published_date }}</p>
-          <p>ISBN: {{ book.isbn_10 }}</p>
-          <p>Pages: {{ book.page_count }}</p>
-          <p>Language: {{ book.language }}</p>
-      </div>
-</article>
+    <form action="{% url 'my-library' %}" method="POST">
+        <section id="book-to-import">
+            <article class="book">
+                <img src="{{ book.thumbnail }}" alt="{{ book.id }}"
+                />
+                <div class="book__content">
+                    <h3>{{ book.title }}</h3>
+                    <p>Authors: {{ book.all_authors }}</p>
+                    <p>Date of publish: {{ book.published_date }}</p>
+                    <p>ISBN: {{ book.isbn_10 }}</p>
+                    <p>Pages: {{ book.page_count }}</p>
+                    <p>Language: {{ book.language }}</p>
+                    {% if book.etag %}
+                    <input id="confirm_button" class="btn-primary" type="submit" value="Import">
+                    {% endif %}
+                </div>
+            </article>
+        </section>
+    </form>
 </li>

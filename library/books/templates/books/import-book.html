@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Library</title>
+  <title>Import Books</title>
   <link rel="stylesheet" href="{% static "books/my-library.css" %}">
 </head>
 <body>
@@ -30,7 +30,7 @@
   </section>
 </form>
   <section id="all-books">
-    <h2>All imported books in your library</h2>
+    <h2>Found {{ number_of_books }} Books</h2>
     <h1>All results 
         for Title: {{ query_data.intitle }}
         , Author: {{ query_data.inauthor }}

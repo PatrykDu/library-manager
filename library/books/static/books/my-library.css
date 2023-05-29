@@ -112,3 +112,7 @@ ul {
 .book p {
     text-indent: 5%;
 }
+
+.book #confirm_button {
+  margin-left: 8rem;
+}

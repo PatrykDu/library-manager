@@ -31,12 +31,14 @@ class ImportBooks(APIView):
         }
 
         # uses query parameters to make request to API
-        books_to_import = fetch_book_data(query_data)
+        number_of_all_generated_books, books_to_import = fetch_book_data(
+            query_data)
 
         # pass fetched data to template
         context = {
             'imported_books': books_to_import,
-            'query_data': query_data
+            'query_data': query_data,
+            'number_of_books': number_of_all_generated_books
         }
         return render(request, 'books/import-book.html', context)
 
@@ -191,6 +193,7 @@ def fetch_book_data(query_data):
     url = f"https://www.googleapis.com/books/v1/volumes?q={query_params}"
     response = requests.get(url)
     answer = response.json()
+    numer_of_books = answer['totalItems'] if 'totalItems' in answer else 0
     books = []
     if answer['totalItems'] != 0:
         books_to_import = answer["items"]
@@ -206,7 +209,7 @@ def fetch_book_data(query_data):
         book_data['published_date'] = book['volumeInfo']['publishedDate'] if "publishedDate" in book['volumeInfo'] else None
         if 'industryIdentifiers' in book['volumeInfo'] and len(book['volumeInfo']['industryIdentifiers']) == 2:
             book_data['isbn_10'] = book['volumeInfo']['industryIdentifiers'][1]['identifier'] if book[
-                'volumeInfo']['industryIdentifiers'][1]['type'] == 'ISBN_10' else None
+                'volumeInfo']['industryIdentifiers'][1]['type'] == 'ISBN_10' else ''
             book_data['isbn_13'] = book['volumeInfo']['industryIdentifiers'][0]['identifier'] if book[
                 'volumeInfo']['industryIdentifiers'][0]['type'] == 'ISBN_13' else None
         else:
@@ -222,4 +225,4 @@ def fetch_book_data(query_data):
         book_data['etag'] = book['etag']
         books.append(book_data)
 
-    return books
+    return (numer_of_books, books)
