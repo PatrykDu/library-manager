@@ -83,11 +83,6 @@ body {
     margin: 3rem 0;
 }
 
-#all-books:visited {
-  text-decoration: none!important;
-  cursor: pointer;
-}
-
 ul {
     list-style: none;
     margin: 0;
