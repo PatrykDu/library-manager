@@ -18,9 +18,25 @@ import requests
 class ImportBooks(APIView):
 
     def get(self, request):
-        books_to_import = fetch_book_data()
+
+        # fetchs data for query parameters from form
+        query_data = {
+            "intitle": self.request.GET.get("intitle", ''),
+            "inauthor": self.request.GET.get("inauthor", ''),
+            "inpublisher": self.request.GET.get("inpublisher", ''),
+            "subject": self.request.GET.get("subject", ''),
+            "isbn": self.request.GET.get("isbn", ''),
+            "lccn": self.request.GET.get("lccn", ''),
+            "oclc": self.request.GET.get("oclc", '')
+        }
+
+        # uses query parameters to make request to API
+        books_to_import = fetch_book_data(query_data)
+
+        # pass fetched data to template
         context = {
-            'imported_books': books_to_import
+            'imported_books': books_to_import,
+            'query_data': query_data
         }
         return render(request, 'books/import-book.html', context)
 
@@ -156,16 +172,31 @@ def filter_language(searched_language, all_books: QuerySet[Book]):
         return filtered_books
 
 
-def fetch_book_data():
+def fetch_book_data(query_data):
 
     def all_authors(authors):
         return ",\n".join([name for name in authors])
 
-    url = "https://www.googleapis.com/books/v1/volumes?q=intitle:item"
+    def construct_query_params(query_data):
+        query = ''
+        for k, v in query_data.items():
+            if v != "":
+                query += f"+{k}:{v}"
+        if query == "":
+            return "intitle:"
+        else:
+            return query
+
+    query_params = construct_query_params(query_data)
+    url = f"https://www.googleapis.com/books/v1/volumes?q={query_params}"
     response = requests.get(url)
     answer = response.json()
-    books_to_import = answer["items"]
     books = []
+    if answer['totalItems'] != 0:
+        books_to_import = answer["items"]
+    else:
+        return books
+
     for book in books_to_import:
         book_data = {}
         book_data['title'] = book['volumeInfo']['title'] if 'title' in book['volumeInfo'] else 'empty title'
@@ -173,7 +204,7 @@ def fetch_book_data():
             'Anonim']
         book_data['all_authors'] = all_authors(book_data['authors'])
         book_data['published_date'] = book['volumeInfo']['publishedDate'] if "publishedDate" in book['volumeInfo'] else None
-        if len(book['volumeInfo']['industryIdentifiers']) == 2:
+        if 'industryIdentifiers' in book['volumeInfo'] and len(book['volumeInfo']['industryIdentifiers']) == 2:
             book_data['isbn_10'] = book['volumeInfo']['industryIdentifiers'][1]['identifier'] if book[
                 'volumeInfo']['industryIdentifiers'][1]['type'] == 'ISBN_10' else None
             book_data['isbn_13'] = book['volumeInfo']['industryIdentifiers'][0]['identifier'] if book[
@@ -182,7 +213,11 @@ def fetch_book_data():
             book_data['isbn_10'] = ''
             book_data['isbn_13'] = ''
         book_data['page_count'] = book['volumeInfo']['pageCount'] if "pageCount" in book['volumeInfo'] else 0
-        book_data['thumbnail'] = book['volumeInfo']['imageLinks']['smallThumbnail'] if 'smallThumbnail' in book['volumeInfo']['imageLinks'] else 'No Cover'
+        if 'imageLinks' in book['volumeInfo']:
+            book_data['thumbnail'] = book['volumeInfo']['imageLinks']['smallThumbnail'] if 'smallThumbnail' in book[
+                'volumeInfo']['imageLinks'] else 'No Cover'
+        else:
+            book_data['thumbnail'] = 'No Cover'
         book_data['language'] = book['volumeInfo']['language'] if 'language' in book['volumeInfo'] else 'en'
         book_data['etag'] = book['etag']
         books.append(book_data)

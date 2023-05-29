@@ -17,32 +17,28 @@
       <a href="{% url "import-books" %}">Import more books</a>
     </nav>
   </header>
-<form action="{% url 'my-library' %}" method="get">
+<form action="{% url 'import-books' %}" method="get">
   <section id="search">
-    <label>Title:<input name="t" placeholder="Keyword found in the title"></label>
-    <label>Author:<input name="t" placeholder="Keyword found in the author"></label>
-    <label>Publisher:<input name="t" placeholder="Keyword found in the publisher"></label>
-    <label>Subject:<input name="t" placeholder="Listed in the category list"></label>
-    <label>ISBN:<input name="t" placeholder="ISBN number"></label>
-    <label>LCCN:<input name="t" placeholder="Library of Congress Control Number"></label>
-    <label>OCLC:<input name="t" placeholder="Online Computer Library Center Number"></label>
+    <label>Title:<input name="intitle" placeholder="Keyword found in the title"></label>
+    <label>Author:<input name="inauthor" placeholder="Keyword found in the author"></label>
+    <label>Publisher:<input name="inpublisher" placeholder="Keyword found in the publisher"></label>
+    <label>Subject:<input name="subject" placeholder="Listed in the category list"></label>
+    <label>ISBN:<input name="isbn" placeholder="ISBN number"></label>
+    <label>LCCN:<input name="lccn" placeholder="Library of Congress Control Number"></label>
+    <label>OCLC:<input name="oclc" placeholder="Online Computer Library Center Number"></label>
     <input id="search_button" class="btn-primary" type="submit" value="Search">
   </section>
 </form>
   <section id="all-books">
     <h2>All imported books in your library</h2>
-    {% comment %} <h1>All results 
-        for date from: {{ library.date_from }} to: {{ library.today }}
-        {% if library.searched_title != '' %}
-        , title: {{ library.searched_title }}
-        {% endif %}
-        {% if library.searched_author != '' %}
-        , author: {{ library.searched_author }}
-        {% endif %}
-        {% if library.searched_language != '' %}
-        , language: {{ library.searched_language }}
-        {% endif %}
-    </h1> {% endcomment %}
+    <h1>All results 
+        for Title: {{ query_data.intitle }}
+        , Author: {{ query_data.inauthor }}
+        , Publisher: {{ query_data.inpublisher }}
+        , ISBN: {{ query_data.isbn }}
+        , LCCN: {{ query_data.lccn }}
+        , OCLC: {{ query_data.oclc }}
+    </h1>
 
     
     <ul>
