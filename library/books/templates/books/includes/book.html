@@ -7,11 +7,11 @@
                 <div class="book__content">
                     {% csrf_token %}
                     <h3 name="title">{{ book.title }}</h3>
-                    <p>Authors: {{ book.all_authors }}</p>
-                    <p>Date of publish: {{ book.published_date }}</p>
-                    <p>ISBN: {{ book.isbn_10 }}</p>
-                    <p>Pages: {{ book.page_count }}</p>
-                    <p>Language: {{ book.language }}</p>
+                    <p><b>Authors:</b> {{ book.all_authors }}</p>
+                    <p><b>Date of publish:</b> {{ book.published_date }}</p>
+                    <p><b>ISBN:</b> {{ book.isbn_10 }}</p>
+                    <p><b>Pages:</b> {{ book.page_count }}</p>
+                    <p><b>Language:</b> {{ book.language }}</p>
                     {% if book.etag %}
                     <input id="confirm_button" class="btn-primary" type="submit" value="Import">
                     {% endif %}

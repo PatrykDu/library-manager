@@ -1,15 +1,12 @@
 import datetime
-from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.urls import reverse
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from django.views.generic import ListView
-from django.views import View
 from django.views.generic.edit import CreateView, UpdateView
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from .models import Book, Author, Language
 from .forms import BookForm
 from datetime import date

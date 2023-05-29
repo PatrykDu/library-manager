@@ -56,20 +56,20 @@
                         <h3>{{ book.title }}</h3>
                         <input type="hidden" id="title_data" name="title_data" type="text" value="{{ book.title }}"/>
 
-                        <p>Authors: {{ book.all_authors }}</p>
+                        <p><b>Authors:</b> {{ book.all_authors }}</p>
                         <input type="hidden" id="authors_data" name="authors_data" type="text" value="{{ book.authors }}"/>
 
-                        <p>Date of publish: {{ book.published_date }}</p>
+                        <p><b>Date of publish:</b> {{ book.published_date }}</p>
                         <input type="hidden" id="date_data" name="date_data" type="text" value={{ book.published_date }}>
 
-                        <p>ISBN: {{ book.isbn_10 }}</p>
+                        <p><b>ISBN:</b> {{ book.isbn_10 }}</p>
                         <input type="hidden" id="isbn10_data" name="isbn10_data" type="text" value={{ book.isbn_10 }}>
                         <input type="hidden" id="isbn13_data" name="isbn13_data" type="text" value={{ book.isbn_13 }}>
 
-                        <p>Pages: {{ book.page_count }}</p>
+                        <p><b>Pages:</b> {{ book.page_count }}</p>
                         <input type="hidden" id="pages_data" name="pages_data" type="text" value={{ book.page_count }}>
 
-                        <p>Language: {{ book.language }}</p>
+                        <p><b>Language:</b> {{ book.language }}</p>
                         <input type="hidden" id="language_data" name="language_data" type="text" value={{ book.language }}>
 
                         {% if book.etag %}
