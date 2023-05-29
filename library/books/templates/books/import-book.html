@@ -51,26 +51,26 @@
                     />
                     <div class="book__content">
                         {% csrf_token %}
-                        <input id="thumbnail_data" name="thumbnail_data" type="text" value="{{ book.thumbnail }}"/>
+                        <input type="hidden" id="thumbnail_data" name="thumbnail_data" type="text" value="{{ book.thumbnail }}"/>
 
                         <h3>{{ book.title }}</h3>
-                        <input id="title_data" name="title_data" type="text" value="{{ book.title }}"/>
+                        <input type="hidden" id="title_data" name="title_data" type="text" value="{{ book.title }}"/>
 
                         <p>Authors: {{ book.all_authors }}</p>
-                        <input id="authors_data" name="authors_data" type="text" value="{{ book.authors }}"/>
+                        <input type="hidden" id="authors_data" name="authors_data" type="text" value="{{ book.authors }}"/>
 
                         <p>Date of publish: {{ book.published_date }}</p>
-                        <input id="date_data" name="date_data" type="text" value={{ book.published_date }}>
+                        <input type="hidden" id="date_data" name="date_data" type="text" value={{ book.published_date }}>
 
                         <p>ISBN: {{ book.isbn_10 }}</p>
-                        <input id="isbn10_data" name="isbn10_data" type="text" value={{ book.isbn_10 }}>
-                        <input id="isbn13_data" name="isbn13_data" type="text" value={{ book.isbn_13 }}>
+                        <input type="hidden" id="isbn10_data" name="isbn10_data" type="text" value={{ book.isbn_10 }}>
+                        <input type="hidden" id="isbn13_data" name="isbn13_data" type="text" value={{ book.isbn_13 }}>
 
                         <p>Pages: {{ book.page_count }}</p>
-                        <input id="pages_data" name="pages_data" type="text" value={{ book.page_count }}>
+                        <input type="hidden" id="pages_data" name="pages_data" type="text" value={{ book.page_count }}>
 
                         <p>Language: {{ book.language }}</p>
-                        <input id="language_data" name="language_data" type="text" value={{ book.language }}>
+                        <input type="hidden" id="language_data" name="language_data" type="text" value={{ book.language }}>
 
                         {% if book.etag %}
                         <input id="confirm_button" class="btn-primary" type="submit" value="Import">
